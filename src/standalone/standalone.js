@@ -129,6 +129,26 @@ function parseURLParameters() {
     viewer = pannellum.viewer('container', configFromURL);
 }
 
+function resetHfov() {
+    if (viewer === undefined) {
+        // Wait for panorama to load
+        setTimeout(resetHfov, 100);
+        return;
+    }
+
+    if (window.innerWidth < window.innerHeight) {
+        // Portrait mode
+        viewer.setHfovBounds([25, 75]);
+        viewer.setHfov(50, false);
+    } else {
+        // Landscape mode
+        viewer.setHfovBounds([50, 120]);
+        viewer.setHfov(100, false);
+    }
+}
+window.addEventListener('resize', resetHfov, false);
+resetHfov();
+
 // Display error if opened from local file
 if (window.location.protocol == 'file:') {
     anError('Due to browser security restrictions, Pannellum can\'t be run ' +
